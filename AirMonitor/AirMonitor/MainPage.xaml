@@ -6,11 +6,24 @@
              mc:Ignorable="d"
              x:Class="AirMonitor.MainPage">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+    <ScrollView>
+        <StackLayout Padding="24" >
+                <Frame CornerRadius="50" Padding="0" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="100" WidthRequest="100" BackgroundColor="#33f069" BorderColor="Gray">
+                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="56" FontAttributes="Bold" TextColor="Black" FontSize="32"/>
+                                <Span Text="&#10;CAQI" FontSize="12" TextColor="DarkSlateGray"/>
+                                <!--<Span>Możesz bezpiecznie wyjść z domu bez swojej maski anty-smogowej i nie bać się o swoje zdrowie</Span>-->
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Frame>
+                <Label Text="Świetna jakość!" FontSize="20" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                <Label Text="Możesz bezpiecznie wyjść z domu bez swojej maski anty-smogowej i nie bać się o swoje zdrowie" FontSize="14" TextColor="Black" HorizontalTextAlignment="Center"/>
+                <BoxView HeightRequest="1" HorizontalOptions="Fill" BackgroundColor="LightGray"/>
+                <Grid></Grid>
+            </StackLayout>
+    </ScrollView>
 
 </ContentPage>
