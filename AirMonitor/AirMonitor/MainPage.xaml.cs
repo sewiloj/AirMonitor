@@ -17,5 +17,10 @@ namespace AirMonitor
         {
             InitializeComponent();
         }
+
+        private void HelpButton_Clicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Co to jest CAQI?", "CAQI jest liczbą w skali od 1 do 100, gdzie niska wartość oznacza dobrą jakość powietrza oraz wysoka wartość oznacza złą jakość powietrza.", "Zamknij");
+        }
     }
 }
