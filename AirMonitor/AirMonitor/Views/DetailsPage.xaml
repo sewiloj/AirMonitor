@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:airmonitor="clr-namespace:AirMonitor"
+             xmlns:viewModels="clr-namespace:AirMonitor.ViewModels"
+             xmlns:converters="clr-namespace:AirMonitor.Converters"
+             mc:Ignorable="d"
+             x:Class="AirMonitor.DetailsPage">
+    <ContentPage.BindingContext>
+        <viewModels:DetailsViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ValueToPercentConverter x:Key="ValueToPercent"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid>
+            <StackLayout Style="{StaticResource DetailsLayoutStyle}">
+                <Frame Style="{StaticResource CaqiFrameStyle}">
+                    <Label Style="{StaticResource CenteredTextStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding CaqiValue}" Style="{StaticResource CaqiValueSpanStyle}"/>
+                                <Span Text="&#10;CAQI" Style="{StaticResource CaqiUnitSpanStyle}"/>
+                        </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Frame>
+                <Label Text="{Binding CaqiTitle}" Style="{StaticResource CaqiTitleStyle}"/>
+                <Label Text="{Binding CaqiDescription}" Style="{StaticResource CaqiDescriptionStyle}"/>
+                <BoxView Style="{StaticResource HorizontalSeparatorStyle}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <airmonitor:ControlWithHeader Title="PM 2,5">
+                    <airmonitor:ControlWithHeader.ControlContent>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                        <Span Text="{Binding Pm25Value}" Style="{StaticResource NormalTextSpanStyle}"/>
+                                        <Span Text=" mg/m3 " Style="{StaticResource SmallTextSpanStyle}"/>
+                                        <Span Text="{Binding Pm25Percent, StringFormat='({0}%)'}" Style="{StaticResource NormalTextSpanStyle}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </airmonitor:ControlWithHeader.ControlContent>
+                </airmonitor:ControlWithHeader>
+
+                    <BoxView Grid.Column="1" Style="{StaticResource VerticalSeparatorStyle}"/>
+
+                <airmonitor:ControlWithHeader Title="PM 10" Grid.Column="2">
+                    <airmonitor:ControlWithHeader.ControlContent>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                        <Span Text="{Binding Pm10Value}" Style="{StaticResource NormalTextSpanStyle}"/>
+                                        <Span Text=" mg/m3 " Style="{StaticResource SmallTextSpanStyle}"/>
+                                        <Span Text="{Binding Pm10Percent, StringFormat='({0}%)'}" Style="{StaticResource NormalTextSpanStyle}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </airmonitor:ControlWithHeader.ControlContent>
+                </airmonitor:ControlWithHeader>
+            </Grid>
+
+                <BoxView Style="{StaticResource HorizontalSeparatorStyle}"/>
+                    
+                <airmonitor:ControlWithHeader Title="Wilogtność">
+                    <airmonitor:ControlWithHeader.ControlContent>
+                    <StackLayout>
+                            <Label Text="{Binding HumidityValue, Converter={StaticResource ValueToPercent}, StringFormat='{0}%'}" Style="{StaticResource NormalTextLabelStyle}" />
+                            <Slider Value="{Binding HumidityValue}"  Style="{StaticResource SliderStyle}"/>
+                    </StackLayout>
+                </airmonitor:ControlWithHeader.ControlContent>
+                </airmonitor:ControlWithHeader>
+
+                <BoxView Style="{StaticResource HorizontalSeparatorStyle}"/>
+
+            <airmonitor:ControlWithHeader Title="Ciśnienie">
+                <airmonitor:ControlWithHeader.ControlContent>
+                    <StackLayout>
+                            <Label Text="{Binding PressureValue, StringFormat='{0} hPa'}" Style="{StaticResource NormalTextLabelStyle}"/>
+                            <Slider Maximum="1100" Minimum="900" Value="{Binding PressureValue}" Style="{StaticResource SliderStyle}"/>
+                    </StackLayout>
+                </airmonitor:ControlWithHeader.ControlContent>
+            </airmonitor:ControlWithHeader>
+        </StackLayout>
+            <ImageButton Style="{StaticResource HelpButtonStyle}" Source="baseline_help_outline_black_24.png" Clicked="HelpButton_Clicked"/>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

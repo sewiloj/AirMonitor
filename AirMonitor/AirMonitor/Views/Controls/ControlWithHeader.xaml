@@ -6,6 +6,14 @@
              mc:Ignorable="d"
              x:Class="AirMonitor.ControlWithHeader"
              x:Name="RootView">
-    <Label Text="{Binding Path=Title, Source={x:Reference RootView}}" FontSize="14" TextColor="Black" />
+    <StackLayout.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="Black"/>
+            </Style>
+        </ResourceDictionary>
+    </StackLayout.Resources>
+    <Label Text="{Binding Path=Title, Source={x:Reference RootView}}"/>
     <ContentView Content="{Binding Path=ControlContent, Source={x:Reference RootView}}"/>
 </StackLayout>
