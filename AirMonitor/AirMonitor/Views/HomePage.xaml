@@ -7,7 +7,14 @@
              x:Class="AirMonitor.Views.HomePage">
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Przejdź do szczegółów" Command="{Binding DetailsCommand}"/>
+            <ListView ItemsSource="{Binding Items}" ItemTapped="ListView_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Installation.Address.AddressText}"
+                              Detail="{Binding CurrentDisplayValue, StringFormat='CAQI: {0}'}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

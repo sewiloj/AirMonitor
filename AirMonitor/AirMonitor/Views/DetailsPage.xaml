@@ -13,7 +13,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:ValueToPercentConverter x:Key="ValueToPercent"/>
+            <converters:PercentToValueConverter x:Key="PercentToValue"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -75,8 +75,8 @@
                 <airmonitor:ControlWithHeader Title="Wilogtność">
                     <airmonitor:ControlWithHeader.ControlContent>
                     <StackLayout>
-                            <Label Text="{Binding HumidityValue, Converter={StaticResource ValueToPercent}, StringFormat='{0}%'}" Style="{StaticResource NormalTextLabelStyle}" />
-                            <Slider Value="{Binding HumidityValue}"  Style="{StaticResource SliderStyle}"/>
+                            <Label Text="{Binding HumidityPercent, StringFormat='{0}%'}" Style="{StaticResource NormalTextLabelStyle}" />
+                            <Slider Value="{Binding HumidityPercent, Converter={StaticResource PercentToValue}, Mode=OneWay}"  Style="{StaticResource SliderStyle}"/>
                     </StackLayout>
                 </airmonitor:ControlWithHeader.ControlContent>
                 </airmonitor:ControlWithHeader>
