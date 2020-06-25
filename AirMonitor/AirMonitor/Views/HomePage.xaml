@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="AirMonitor.Views.HomePage">
     <ContentPage.Content>
-        <StackLayout>
+        <Grid>
             <ListView ItemsSource="{Binding Items}" ItemTapped="ListView_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -15,6 +15,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackLayout>
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" VerticalOptions="Center" Color="OrangeRed"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

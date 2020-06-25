@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 
 namespace AirMonitor.ViewModels
 {
@@ -18,7 +19,10 @@ namespace AirMonitor.ViewModels
     {
         private readonly INavigation _navigation;
         private ICommand _detailsCommand;
+        private ICommand _pinCommand;
         private List<Measurement> _items;
+        private List<MapLocation> _locations;
+        private bool _isBusy = true;
 
         public HomeViewModel(INavigation navigation)
         {
@@ -27,10 +31,21 @@ namespace AirMonitor.ViewModels
         }
 
         public ICommand DetailsCommand => _detailsCommand ?? (_detailsCommand = new Command<Measurement>(GoToDetails));
+        public ICommand PinCommand => _pinCommand ?? (_pinCommand = new Command<string>(InfoWindowClickedCommand));
         public List<Measurement> Items
         {
             get => _items;
             set => SetProperty(ref _items, value);
+        }
+        public List<MapLocation> Locations
+        {
+            get => _locations;
+            set => SetProperty(ref _locations, value);
+        }
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
         }
 
         private void GoToDetails(Measurement measurement)
@@ -38,14 +53,30 @@ namespace AirMonitor.ViewModels
             _navigation.PushAsync(new DetailsPage(measurement));
         }
 
+        private void InfoWindowClickedCommand(string pinAddress)
+        {
+            Measurement measurement = Items.First<Measurement>(i => i.Installation.Address.AddressText.Equals(pinAddress));
+            _navigation.PushAsync(new DetailsPage(measurement));
+
+        }
+
 
         private async Task Initialize()
         {
+            IsBusy = true;
             CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
             var location = await GetLocation();
             var installations = await GetInstallations(location);
             var measurements = await GetMeasurementsForInstallations(installations);
             Items = new List<Measurement>(measurements);
+            Locations = Items.Select(i => new MapLocation
+            {
+                Address = i.Installation.Address.AddressText,
+                Description = "CAQI: " + i.CurrentDisplayValue,
+                Position = new Position(i.Installation.Location.Latitude,
+                i.Installation.Location.Longitude)
+            }).ToList();
+            IsBusy = false;
         }
 
         private async Task<Location> GetLocation()
@@ -62,7 +93,7 @@ namespace AirMonitor.ViewModels
 
                 if (location != null)
                 {
-                        var type = location.Latitude.GetType(); 
+                    var type = location.Latitude.GetType(); 
                     System.Diagnostics.Debug.WriteLine(location.Latitude);
                     System.Diagnostics.Debug.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}, location_get_success");
                 }
@@ -91,7 +122,7 @@ namespace AirMonitor.ViewModels
 
         private async Task<IEnumerable<Installation>> GetInstallations(Location location, double maxDistance = 3, int maxResults = 1)
         {
-            string url = $"installations/nearest?lat={location.Latitude}&lng={location.Longitude}&maxDistanceKM={maxDistance}&maxResults={maxResults}";
+            string url = $"{App.InstallationUrl}?lat={location.Latitude}&lng={location.Longitude}&maxDistanceKM={maxDistance}&maxResults={maxResults}";
             if (location == null)
             {
                 System.Diagnostics.Debug.WriteLine("Location error");
@@ -112,7 +143,7 @@ namespace AirMonitor.ViewModels
             var measurements = new List<Measurement>();
             foreach (var installation in installations)
             {
-                string url = $"measurements/installation?installationId={installation.Id}";
+                string url = $"{App.MeasurementUrl}?installationId={installation.Id}";
                 var response = await GetHttpResponse<Measurement>(url);
 
                 if (response != null)
@@ -130,12 +161,12 @@ namespace AirMonitor.ViewModels
         {
             HttpClient client = new HttpClient
             {
-                BaseAddress = new Uri("https://airapi.airly.eu/v2/")
+                BaseAddress = new Uri(App.ApiUrl)
             };
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("Accept-Language", "pl");
             client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
-            client.DefaultRequestHeaders.Add("apikey", "8yoYVYdRUjpijI9S1ToY6QIZdDUEHDu2");
+            client.DefaultRequestHeaders.Add("apikey", App.ApiKey);
 
             return client;
         }
